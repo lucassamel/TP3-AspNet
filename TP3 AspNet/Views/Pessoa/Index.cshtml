@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TP3_AspNet.Models.Pessoa>
+﻿@model TP3_AspNet.Models.Pessoa
 
 @{
     ViewData["Title"] = "Index";
@@ -28,19 +28,19 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.PessoaId)
+                @Html.DisplayFor(modelItem => modelItem.PessoaId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nome)
+                @Html.DisplayFor(modelItem => modelItem.Nome)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Sobrenome)
+                @Html.DisplayFor(modelItem => modelItem.Sobrenome)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Idade)
+                @Html.DisplayFor(modelItem => modelItem.Idade)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
@@ -48,6 +48,6 @@
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
         </tr>
-}
+
     </tbody>
 </table>

@@ -42,18 +42,11 @@ namespace TP3_AspNet.Controllers
         // POST: Pessoa/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Pessoa pessoa)
         {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            
+            return View(pessoa);
+      
         }
 
         // GET: Pessoa/Edit/5
