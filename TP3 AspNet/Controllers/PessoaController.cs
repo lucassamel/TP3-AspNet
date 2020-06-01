@@ -12,47 +12,146 @@ namespace TP3_AspNet.Controllers
     {
         public string Nome { get; private set; }
 
+
+        #region Create Pessoa
+
+        private static int ContaId = 1;
+
+        public static int AddId()
+        {
+            ContaId += 1;
+            return ContaId;
+        }
+
+        public static int GetId()
+        {
+            return ContaId;
+        }
+
+        private static List<Pessoa> pessoaList = new List<Pessoa>
+        {
+            new Pessoa()
+            {
+            PessoaId = 0,
+            Idade = 22,
+            Nome = "Lucas",
+            Sobrenome = "Samel"
+            }     
+        };
+
+        public static void AddPessoa(Pessoa pessoa)
+        {
+            pessoaList.Add(pessoa);
+        }
+        #endregion
+
+        public static List<Pessoa> GetpessoaList()
+        {
+            return pessoaList;
+        }
+
+        public static Pessoa BuscarId(int id)
+        {
+            Pessoa resultado = new Pessoa();
+            foreach(Pessoa a in pessoaList)
+            {
+                if(a.PessoaId == id)
+                {
+                    resultado.PessoaId = a.PessoaId;
+                    resultado.Nome = a.Nome;
+                    resultado.Sobrenome = a.Sobrenome;
+                    resultado.Idade = a.Idade;
+                    break;
+                }
+            }
+            return resultado;
+        }
+
+        public static void EditPessoa (int id , Pessoa pessoaUpdate)
+        {
+            foreach(Pessoa a in pessoaList)
+            {
+                if(a.PessoaId == id)
+                {
+                    a.Nome = pessoaUpdate.Nome;
+                    a.Sobrenome = pessoaUpdate.Sobrenome;
+                    a.Idade = pessoaUpdate.Idade;
+                    break;
+                }
+            }
+        }
+
+        public static void DeletePessoa(int id)
+        {
+            foreach (Pessoa a in pessoaList)
+            {
+                if (a.PessoaId == id)
+                {
+                    pessoaList.Remove(a);
+                    break;
+                }
+            }
+        }
+
+        public static List<Pessoa> BuscarPessoa(string pesquisa)
+        {
+            List<Pessoa> resultados = new List<Pessoa>();
+            foreach (Pessoa a in pessoaList)
+            {
+                if (a.Nome.Contains(pesquisa))
+                {
+                    resultados.Add(a);
+                }
+            }
+            return resultados;
+        }
+
         // GET: Pessoa
         public ActionResult Index()
         {
-            Pessoa pessoa = new Pessoa
-            {
-                Nome = "Lucas",
-                PessoaId = 0,
-                Sobrenome = "Samel",
-                Idade = 22
-            };
-
-
-            return View(pessoa);
+            return View(GetpessoaList());
         }
 
+        #region Details
         // GET: Pessoa/Details/5
         public ActionResult Details(int id)
         {
-            return View();
-        }
 
+
+            return View(BuscarId(id));
+        }
+        #endregion
+
+        #region Create
         // GET: Pessoa/Create
         public ActionResult Create()
         {
             return View();
-        }
+        }        
 
         // POST: Pessoa/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Pessoa pessoa)
+        public ActionResult Create(IFormCollection collection)
         {
-            
-            return View(pessoa);
-      
-        }
+            Pessoa pessoa = new Pessoa();
+            pessoa.PessoaId = GetId();
+            pessoa.Nome = collection["Nome"];
+            pessoa.Sobrenome = collection["Sobrenome"];
+            pessoa.Idade = Int32.Parse(collection["Idade"]);
 
+            AddId();
+            AddPessoa(pessoa);
+
+            return RedirectToAction("Index");
+        }
+        #endregion
+
+        #region Edit
         // GET: Pessoa/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(BuscarId(id));
         }
 
         // POST: Pessoa/Edit/5
@@ -62,7 +161,12 @@ namespace TP3_AspNet.Controllers
         {
             try
             {
-                // TODO: Add update logic here
+                Pessoa pessoa = new Pessoa();
+                pessoa.Nome = collection["Nome"];
+                pessoa.Sobrenome = collection["Sobrenome"];
+                pessoa.Idade = Int32.Parse(collection["Idade"]);
+
+                EditPessoa(id, pessoa);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -71,11 +175,13 @@ namespace TP3_AspNet.Controllers
                 return View();
             }
         }
+        #endregion
 
+        #region Delete
         // GET: Pessoa/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(BuscarId(id));
         }
 
         // POST: Pessoa/Delete/5
@@ -85,7 +191,7 @@ namespace TP3_AspNet.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
+                DeletePessoa(id);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -94,5 +200,33 @@ namespace TP3_AspNet.Controllers
                 return View();
             }
         }
+        #endregion
+
+        public ActionResult Buscar()
+        {
+            string pesquisa = "";
+
+            return View(BuscarPessoa(pesquisa));
+        }
+
+        [HttpPost]
+        public ActionResult Buscar(string pesquisa)
+        {
+            try
+            {
+                return View(BuscarPessoa(pesquisa));
+            }
+            catch
+            {
+
+            }
+
+            return View();
+
+        }
+
     }
+
+
+
 }

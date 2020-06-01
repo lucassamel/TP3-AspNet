@@ -46,7 +46,7 @@ namespace TP3_AspNet
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Pessoa}/{action=Create}/{id?}");
+                    pattern: "{controller=Pessoa}/{action=Index}/{id?}");
             });
         }
     }
